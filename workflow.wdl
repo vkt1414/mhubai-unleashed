@@ -18,6 +18,7 @@ workflow mhubai_workflow {
  call executor{
    input:
     jsonServiceAccountFile = jsonServiceAccountFile,
+    projectID = projectID,
     MHUB_MODEL_NAME = MHUB_MODEL_NAME,
     docker = docker,
     preemptibleTries = preemptibleTries,
