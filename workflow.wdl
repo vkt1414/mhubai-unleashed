@@ -58,7 +58,7 @@ task executor{
    wget https://raw.githubusercontent.com/vkt1414/mhubai-unleashed/main/preProcessNotebooks.py
    python3 preProcessNotebooks.py --file-name=notebook.ipynb  # Pass the fixed name to your script
    pip install papermill
-   papermill -p MHUB_MODEL_NAME ~{MHUB_MODEL_NAME} notebook.ipynb outputNotebook.ipynb  # Use the fixed name here too
+   papermill -p MHUB_MODEL_NAME ~{MHUB_MODEL_NAME} -p GC_PROJECT_ID  ~{projectID} notebook.ipynb outputNotebook.ipynb  # Use the fixed name here too
  }
  #Run time attributes:
  runtime {
