@@ -63,12 +63,14 @@ task executor{
  runtime {
    docker: docker
    cpu: cpus
-   cpuPlatform: cpuFamily
+   #cpuPlatform: cpuFamily
    zones: zones
    memory: ram + " GiB"
    disks: "local-disk 50 HDD" 
    preemptible: preemptibleTries
    maxRetries: 3
+   gpuType: gpuType 
+   gpuCount: 1
  }
  output {
    File outputNotebook = "outputNotebook.ipynb"
