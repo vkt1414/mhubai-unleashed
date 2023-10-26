@@ -1,3 +1,38 @@
+version 1.0
+#WORKFLOW DEFINITION
+workflow mhubai_workflow {
+ input {
+   #all the inputs entered here but not hardcoded will appear in the UI as required fields
+   #And the hardcoded inputs will appear as optional to override the values entered here
+   File jsonServiceAccountFile
+   String projectID
+   String MHUB_MODEL_NAME
+   String docker = "imagingdatacommons/idc-testing-colab"
+   Int preemptibleTries = 3
+   Int cpus = 4
+   Int ram = 16
+   String gpuType = 'nvidia-tesla-t4'
+   String zones = "us-west4-a us-west4-b europe-west2-a europe-west2-b asia-east1-a asia-east1-c australia-southeast1-a australia-southeast1-c asia-northeast1-a asia-northeast1-c"
+ }
+ #calling Papermill Task with the inputs
+ call executor{
+   input:
+    jsonServiceAccountFile = jsonServiceAccountFile,
+    MHUB_MODEL_NAME = MHUB_MODEL_NAME,
+    docker = docker,
+    preemptibleTries = preemptibleTries,
+    cpus = cpus,
+    ram = ram,
+    gpuType = gpuType,
+    #cpuFamily = cpuFamily, 
+    zones = zones
+}
+ output {
+  #output notebooks
+   File outputZip = executor.outputZip
+   File outputNotebook = executor.outputNotebook
+ }
+
 #Task Definitions
 task executor{
  input {
