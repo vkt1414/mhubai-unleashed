@@ -32,6 +32,7 @@ workflow mhubai_workflow {
    File outputZip = executor.outputZip
    File outputNotebook = executor.outputNotebook
  }
+}
 
 #Task Definitions
 task executor{
