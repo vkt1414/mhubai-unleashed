@@ -1,5 +1,6 @@
 import subprocess
 import nbformat
+import argparse  # Import the argparse module
 
 def modify_notebook(file_name):
     # Load the notebook
@@ -25,5 +26,12 @@ def modify_notebook(file_name):
     with open(file_name, 'w') as f:
         nbformat.write(nb, f)
 
-# Call the function
-modify_notebook(file_name)
+# Create an argument parser
+parser = argparse.ArgumentParser(description='Modify a notebook.')
+parser.add_argument('--file-name', type=str, help='The name of the file to modify.')
+
+# Parse the arguments
+args = parser.parse_args()
+
+# Call the function with the file_name argument
+modify_notebook(args.file_name)
