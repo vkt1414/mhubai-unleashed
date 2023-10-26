@@ -7,8 +7,8 @@ def modify_notebook(file_name):
     with open(file_name) as f:
         nb = nbformat.read(f, as_version=4)
         
-    path_prefix = '/content/'
-    
+    path_prefix_1 = '/app'
+    path_prefix_2 = '/content'
     # Loop over the cells
     for cell in nb.cells:
         if cell.cell_type == "code":
@@ -16,7 +16,8 @@ def modify_notebook(file_name):
             cell.source = cell.source.replace('GC_PROJECT_ID = "idc-external-030" # @param {type:"string"}\n', "#this project_id is modified by preprocessingNotebooks.py\nGC_PROJECT_ID=''")
             # Comment out another line
             cell.source = cell.source.replace('auth.authenticate_user()', '#while running the notebook with papermill, the authentication is handled by using application default credentials\n#auth.authenticate_user()')         
-            cell.source = cell.source.replace(path_prefix, '/cromwell_root' + path_prefix)
+            cell.source = cell.source.replace(path_prefix_1, '/cromwell_root' + path_prefix)
+            cell.source = cell.source.replace(path_prefix_2, '/cromwell_root' + path_prefix)          
             cell.source = cell.source.replace('files.download(archive_fn)', '#while running the notebook with papermill, there is no need to download\n#files.download(archive_fn)')   
 
             # Check if the cell contains the specific string and add a tag
