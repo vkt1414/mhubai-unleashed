@@ -1,0 +1,2 @@
+entity:mhubai_workflow_id	jsonServiceAccountFile	MHUB_MODEL_NAME	projectID
+1	gs://fc-5af492dc-6993-4c91-bbf6-3e2747868642/mhubai/idc-external-025-c16dc3a9bbf3.json	lungmask	idc-external-025
