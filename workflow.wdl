@@ -12,7 +12,7 @@ workflow mhubai_workflow {
    Int cpus = 4
    Int ram = 16
    String gpuType = 'nvidia-tesla-t4'
-   String zones = "us-west4-a us-west4-b europe-west2-a europe-west2-b asia-east1-a asia-east1-c australia-southeast1-a australia-southeast1-c asia-northeast1-a asia-northeast1-c"
+   String zones = "europe-west2-a europe-west2-b asia-northeast1-a asia-northeast1-c asia-southeast1-a asia-southeast1-b asia-southeast1-c us-east4-a us-east4-b us-east4-c" 
  }
  #calling Papermill Task with the inputs
  call executor{
