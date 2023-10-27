@@ -30,8 +30,8 @@ workflow mhubai_workflow {
 }
  output {
   #output notebooks
-   File outputZip = executor.outputZip
-   File outputNotebook = executor.outputNotebook
+   File? outputZip = executor.outputZip
+   File? outputNotebook = executor.outputNotebook
  }
 }
 
@@ -58,7 +58,10 @@ task executor{
    wget https://raw.githubusercontent.com/vkt1414/mhubai-unleashed/main/preProcessNotebooks.py
    python3 preProcessNotebooks.py --file-name=notebook.ipynb  # Pass the fixed name to your script
    pip install papermill
-   papermill -p MHUB_MODEL_NAME ~{MHUB_MODEL_NAME} -p GC_PROJECT_ID  ~{projectID} notebook.ipynb outputNotebook.ipynb  # Use the fixed name here too
+   papermill -p MHUB_MODEL_NAME ~{MHUB_MODEL_NAME} -p GC_PROJECT_ID  ~{projectID} notebook.ipynb outputNotebook.ipynb
+   ls -A
+   cd /cromwell_root
+   ls -A
    mv /content/outputNotebook.ipynb /content/*zip /cromwell_root
  }
  #Run time attributes:
@@ -75,7 +78,7 @@ task executor{
    gpuCount: 1
  }
  output {
-   File outputNotebook = "outputNotebook.ipynb"
-   File outputZip  = "*.zip"
+   File? outputNotebook = "outputNotebook.ipynb"
+   File? outputZip  = "*.zip"
  }
 }
