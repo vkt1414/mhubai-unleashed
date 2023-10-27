@@ -59,10 +59,7 @@ task executor{
    python3 preProcessNotebooks.py --file-name=notebook.ipynb  # Pass the fixed name to your script
    pip install papermill
    papermill -p MHUB_MODEL_NAME ~{MHUB_MODEL_NAME} -p GC_PROJECT_ID  ~{projectID} notebook.ipynb outputNotebook.ipynb
-   ls -A
-   cd /cromwell_root
-   ls -A
-   mv /content/outputNotebook.ipynb /content/*zip /cromwell_root
+   mv /content/outputNotebook.ipynb /content/*.zip /cromwell_root
  }
  #Run time attributes:
  runtime {
