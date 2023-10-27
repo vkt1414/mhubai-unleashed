@@ -51,14 +51,15 @@ task executor{
  }
  command {
    export GOOGLE_APPLICATION_CREDENTIALS=~{jsonServiceAccountFile}
-   mkdir content
-   cd content
+   mkdir /content
+   cd /content
    NOTEBOOK_URL="https://raw.githubusercontent.com/MHubAI/examples/main/notebooks/MICCAI23_tutorial.ipynb"
    wget $NOTEBOOK_URL -O notebook.ipynb  # Save the notebook with a fixed name
    wget https://raw.githubusercontent.com/vkt1414/mhubai-unleashed/main/preProcessNotebooks.py
    python3 preProcessNotebooks.py --file-name=notebook.ipynb  # Pass the fixed name to your script
    pip install papermill
    papermill -p MHUB_MODEL_NAME ~{MHUB_MODEL_NAME} -p GC_PROJECT_ID  ~{projectID} notebook.ipynb outputNotebook.ipynb  # Use the fixed name here too
+   mv /content/outputNotebook.ipynb /content/*zip /cromwell_root
  }
  #Run time attributes:
  runtime {
