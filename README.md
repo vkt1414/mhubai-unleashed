@@ -21,5 +21,8 @@ To get started with these workflows, follow these steps:
 
 3. Provide the following inputs:
    - GCP projectID
-   - A GCP service account key file with at least Bigquery User role
+   - A GCP service account key file with at least a Bigquery User role
    - MHUBAI model name
+     
+4. A sample data table manifest you can import can be found in the repo
+   - [Sample data table manifest](https://github.com/vkt1414/mhubai-unleashed/blob/main/mhubai_workflow.tsv)
