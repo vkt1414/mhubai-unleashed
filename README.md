@@ -2,6 +2,10 @@
 
 Welcome to the `mhubai-unleashed` repository! This repository hosts WDL (Workflow Description Language) workflows for MHUBAI (Medical Hub AI), providing a structured and scalable way to run complex pipelines.
 
+
+Please cite MHUBAI as this repo is based on their work:
+https://github.com/MHubAI
+
 ## Overview
 
 The workflows in this repository are designed to facilitate the execution of MHUBAI tasks, ensuring reproducibility and ease of use.
@@ -28,5 +32,3 @@ To get started with these workflows, follow these steps:
    - [Sample data table manifest](https://github.com/vkt1414/mhubai-unleashed/blob/main/mhubai_workflow.tsv)
 
 
-Please cite MHUBAI as this repo is based on their work:
-https://github.com/MHubAI
