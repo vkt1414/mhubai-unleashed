@@ -26,3 +26,7 @@ To get started with these workflows, follow these steps:
      
 4. A sample data table manifest you can import can be found in the repo
    - [Sample data table manifest](https://github.com/vkt1414/mhubai-unleashed/blob/main/mhubai_workflow.tsv)
+
+
+Please cite MHUBAI as this repo is based on their work:
+https://github.com/MHubAI
