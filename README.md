@@ -30,6 +30,6 @@ To get started with these workflows, follow these steps:
    - If you want to override mhubai's default config, provide your custom config in yaml format while submitting the workflow
      
 5. A sample data table manifest you can import can be found in the repo
-   - [Sample data table manifest](https://github.com/vkt1414/mhubai-unleashed/blob/main/mhubai_workflow.tsv)
+   - [Sample data table manifest](https://github.com/vkt1414/mhubai-unleashed/blob/main/examples/mhubai_workflow.tsv)
 
 

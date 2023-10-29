@@ -2,7 +2,7 @@ version: 1.2
 workflows:
    - name: mhubaiColabWorkflowOnTerra
      subclass: WDL
-     primaryDescriptorPath: colab_workflow.wdl
+     primaryDescriptorPath: src/wdl/colab_workflow.wdl
    - name: mhubaiDockerfileWorkflowOnTerra
      subclass: WDL
-     primaryDescriptorPath: dockerfile_workflow.wdl
+     primaryDescriptorPath: src/wdl/dockerfile_workflow.wdl
