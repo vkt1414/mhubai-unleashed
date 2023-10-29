@@ -24,11 +24,12 @@ To get started with these workflows, follow these steps:
    - [NHLBI BioData Catalyst](https://biocatalyst.nhlbi.nih.gov/)
 
 3. Provide the following inputs:
-   - GCP projectID
-   - A GCP service account key file with at least a Bigquery User role
    - MHUBAI model name
+   - aws or gcs urls in a txt or csv file, each line containing a single URL (choose one provider but not mix aws and gcp)
+     - TIP: If files are downloaded from ImagingDataCommons, all SOPInstances in a series can be referenced by wildcard such as s3://idc-open-data/d0686cc8-0f8b-4e77-8707-605d1d8f7a08/*
+   - If you want to override mhubai's default config, provide your custom config in yaml format while submitting the workflow
      
-4. A sample data table manifest you can import can be found in the repo
+5. A sample data table manifest you can import can be found in the repo
    - [Sample data table manifest](https://github.com/vkt1414/mhubai-unleashed/blob/main/mhubai_workflow.tsv)
 
 
