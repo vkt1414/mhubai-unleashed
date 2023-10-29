@@ -79,7 +79,6 @@ task executor{
   #compress the outputs using lz4
   tar -C /app/data -cvf - output_data | lz4 > /cromwell_root/output.tar.lz4
 
-  #terra expects any outputs to be delocalized to be in /cromwell_root directory. So moving the output files there
   mv /app/data/output_data/* /cromwell_root/
 
 
