@@ -29,7 +29,6 @@ workflow mhubai_workflow {
  output {
   #output notebooks
    File? outputZip = executor.outputZip
-   File? outputNotebook = executor.outputNotebook
  }
 }
 
@@ -53,6 +52,9 @@ task executor{
    && rm "s5cmd_2.2.2_Linux-64bit.tar.gz" \
    && mv s5cmd /usr/local/bin/s5cmd
 
+  apt-get update
+  apt-get install -y lz4 tar
+
   # Read the CSV file line by line
   while IFS= read -r line
   do
@@ -65,6 +67,9 @@ task executor{
   cd /app
 
   python3 -m mhubio.run --config /app/models/totalsegmentator/config/default.yml
+
+  tar -C /app/data -cvf - output_data | lz4 > downloadDicomAndConvertNiftiFiles.tar.lz4
+
 
   mv /app/data/output_data/* /cromwell_root/
  }
@@ -82,7 +87,6 @@ task executor{
    gpuCount: 1
  }
  output {
-   File? outputNotebook = "outputNotebook.ipynb"
-   File? outputZip  = "*.zip"
+   File? outputZip  = "*.lz4"
  }
 }
