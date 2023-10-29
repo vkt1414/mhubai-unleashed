@@ -74,7 +74,7 @@ task executor{
   mv /app/data/output_data/* /cromwell_root/
 
   cd /cromwell_root
-  ls -A
+  ls -R
  }
  #Run time attributes:
  runtime {
