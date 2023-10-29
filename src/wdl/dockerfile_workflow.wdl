@@ -1,3 +1,15 @@
+# This WDL script is designed to run any models abstracted by mhubai
+# This wdl workflow takes several inputs including the model name, custom configuration file, and resource specifications (CPUs, RAM, GPU type).
+# It then calls the task (mhubai_terra_runner) with these inputs.
+
+# The mhubai_terra_runner task first installs necessary tools (s5cmd for data download and lz4 for compression), 
+# then downloads the data from either AWS S3 or Google Cloud Storage (GCS). 
+# After that, it runs the models using the mhubio.run command with the provided model name and configuration file. 
+# Finally, it compresses the output data and moves it to the Cromwell root directory.
+
+# The runtime attributes specify the Docker image to use, CPU and memory resources, disk type and size, 
+# number of preemptible tries and retries, GPU type and count, and the zones where to run the task.
+
 version 1.0
 #WORKFLOW DEFINITION
 workflow mhubai_workflow {
