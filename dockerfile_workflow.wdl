@@ -77,10 +77,7 @@ task executor{
   #mhub uses /app as the working directory..so we try to simulate the same
   cd /app
 
-  if defined(~{mhubai_custom_config}) then
-    python3 -m mhubio.run --config ~{mhubai_custom_config}
-  else
-    python3 -m mhubio.run --config /app/models/~{mhub_model_name}/config/default.yml
+  python3 -m mhubio.run --config ~{select_first([mhubai_custom_config, "/app/models/" + mhub_model_name + "/config/default.yml"])}
 
   tar -C /app/data -cvf - output_data | lz4 > /cromwell_root/output.tar.lz4
 
