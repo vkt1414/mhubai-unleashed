@@ -5,6 +5,7 @@ workflow mhubai_workflow {
    #all the inputs entered here but not hardcoded will appear in the UI as required fields
    #And the hardcoded inputs will appear as optional to override the values entered here
    String mhub_model_name
+   File? mhubai_custom_config
    File s5cmdUrls
    Int preemptibleTries = 3
    Int cpus = 4
@@ -16,6 +17,7 @@ workflow mhubai_workflow {
  call executor{
    input:
     s5cmdUrls = s5cmdUrls,
+    mhubai_custom_config = mhubai_custom_config,
     mhub_model_name = mhub_model_name,
     docker = "mhubai/"+mhub_model_name,
     preemptibleTries = preemptibleTries,
@@ -36,9 +38,9 @@ task executor{
  input {
    #Just like the workflow inputs, any new inputs entered here but not hardcoded will appear in the UI as required fields
     File s5cmdUrls
+    File? mhubai_custom_config
     String docker
     String mhub_model_name
-    String docker
     Int preemptibleTries
     Int cpus
     Int ram
@@ -75,7 +77,10 @@ task executor{
   #mhub uses /app as the working directory..so we try to simulate the same
   cd /app
 
-  python3 -m mhubio.run --config /app/models/~{mhub_model_name}/config/default.yml
+  if defined(~{mhubai_custom_config}) then
+    python3 -m mhubio.run --config ~{mhubai_custom_config}
+  else
+    python3 -m mhubio.run --config /app/models/~{mhub_model_name}/config/default.yml
 
   tar -C /app/data -cvf - output_data | lz4 > /cromwell_root/output.tar.lz4
 
