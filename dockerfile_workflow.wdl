@@ -60,7 +60,7 @@ task mhubai_terra_runner{
     Int ram
     Int preemptibleTries
     String gpuType 
-    String zones
+    String gpuZones
  }
  command {
     # Install s5cmd
