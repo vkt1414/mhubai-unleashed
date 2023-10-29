@@ -17,6 +17,7 @@ workflow mhubai_workflow {
    input:
     s5cmdUrls = s5cmdUrls,
     mhub_model_name = mhub_model_name,
+    docker = "mhubai/"+mhub_model_name,
     preemptibleTries = preemptibleTries,
     cpus = cpus,
     ram = ram,
@@ -35,6 +36,7 @@ task executor{
  input {
    #Just like the workflow inputs, any new inputs entered here but not hardcoded will appear in the UI as required fields
     File s5cmdUrls
+    String docker
     String mhub_model_name
     String docker
     Int preemptibleTries
@@ -83,7 +85,7 @@ task executor{
  }
  #Run time attributes:
  runtime {
-   docker: mhubai/~{mhub_model_name}
+   docker: docker
    cpu: cpus
    #cpuPlatform: cpuFamily
    zones: zones
