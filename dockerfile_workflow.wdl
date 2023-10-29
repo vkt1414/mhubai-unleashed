@@ -68,7 +68,7 @@ task executor{
 
   python3 -m mhubio.run --config /app/models/totalsegmentator/config/default.yml
 
-  tar -C /app/data -cvf - output_data | lz4 > downloadDicomAndConvertNiftiFiles.tar.lz4
+  tar -C /app/data -cvf - output_data | lz4 > /cromwell_root/output.tar.lz4
 
 
   mv /app/data/output_data/* /cromwell_root/
