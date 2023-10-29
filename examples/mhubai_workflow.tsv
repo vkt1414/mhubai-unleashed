@@ -1,2 +1,9 @@
-entity:mhubai_workflow_id	jsonServiceAccountFile	MHUB_MODEL_NAME	projectID
-1	gs://fc-5af492dc-6993-4c91-bbf6-3e2747868642/mhubai/idc-external-025-c16dc3a9bbf3.json	lungmask	idc-external-025
+entity:mhubai_batch_id	mhub_model_name	awsOrGcsUrls	customConfig
+1	lungmask	gs://fc-5af492dc-6993-4c91-bbf6-3e2747868642/mhubai/input.txt	
+2	gc_lunglobes	gs://fc-5af492dc-6993-4c91-bbf6-3e2747868642/mhubai/input.txt	
+3	nnunet_pancreas	gs://fc-5af492dc-6993-4c91-bbf6-3e2747868642/mhubai/input.txt	
+4	totalsegmentator	gs://fc-5af492dc-6993-4c91-bbf6-3e2747868642/mhubai/input.txt	gs://fc-5af492dc-6993-4c91-bbf6-3e2747868642/mhubai/custom_config.yml
+5	platipy	gs://fc-5af492dc-6993-4c91-bbf6-3e2747868642/mhubai/input.txt	
+6	casust	gs://fc-5af492dc-6993-4c91-bbf6-3e2747868642/mhubai/input.txt	
+7	nnunet_segthor	gs://fc-5af492dc-6993-4c91-bbf6-3e2747868642/mhubai/input.txt	
+8	nnunet_liver	gs://fc-5af492dc-6993-4c91-bbf6-3e2747868642/mhubai/input.txt	
