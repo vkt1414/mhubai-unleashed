@@ -4,9 +4,8 @@ workflow mhubai_workflow {
  input {
    #all the inputs entered here but not hardcoded will appear in the UI as required fields
    #And the hardcoded inputs will appear as optional to override the values entered here
-   #String MHUB_MODEL_NAME
+   String mhub_model_name
    File s5cmdUrls
-   String docker = "mhubai/totalsegmentator"
    Int preemptibleTries = 3
    Int cpus = 4
    Int ram = 16
@@ -17,8 +16,7 @@ workflow mhubai_workflow {
  call executor{
    input:
     s5cmdUrls = s5cmdUrls,
-    #MHUB_MODEL_NAME = MHUB_MODEL_NAME,
-    docker = docker,
+    mhub_model_name = mhub_model_name,
     preemptibleTries = preemptibleTries,
     cpus = cpus,
     ram = ram,
@@ -37,7 +35,7 @@ task executor{
  input {
    #Just like the workflow inputs, any new inputs entered here but not hardcoded will appear in the UI as required fields
     File s5cmdUrls
-    #String MHUB_MODEL_NAME
+    String mhub_model_name
     String docker
     Int preemptibleTries
     Int cpus
@@ -52,33 +50,43 @@ task executor{
    && rm "s5cmd_2.2.2_Linux-64bit.tar.gz" \
    && mv s5cmd /usr/local/bin/s5cmd
 
+  #install lz4, which will be used for compressing output files lateron
   apt-get update
   apt-get install -y lz4 tar
 
-  # Read the CSV file line by line
+  #modify the input manifest conducive to s5cmd download
   while IFS= read -r line
   do
     # Modify the line and write to output.txt
     echo "cp --show-progress $line /app/data/input_data" >> s5cmd_manifest.txt
   done < ~{s5cmdUrls}
 
+  #Download the data assuming aws_urls
   s5cmd --no-sign-request --endpoint-url https://s3.amazonaws.com run s5cmd_manifest.txt
 
+  #if aws_urls did not work, try downloading from gcs_urls
+  if [ $? -ne 0 ]; then
+      echo "S3 command failed, trying GCS..."
+      s5cmd --no-sign-request --endpoint-url https://storage.googleapis.com run s5cmd_manifest.txt
+  fi
+
+  #mhub uses /app as the working directory..so we try to simulate the same
   cd /app
 
-  python3 -m mhubio.run --config /app/models/totalsegmentator/config/default.yml
+  #all mhubai images follow similar endpoint in their docker containers
+  python3 -m mhubio.run --config /app/models/{mhub_model_name}/config/default.yml
 
+  #compress the outputs using lz4
   tar -C /app/data -cvf - output_data | lz4 > /cromwell_root/output.tar.lz4
 
-
+  #terra expects any outputs to be delocalized to be in /cromwell_root directory. So moving the output files there
   mv /app/data/output_data/* /cromwell_root/
 
-  cd /cromwell_root
-  ls -R
+
  }
  #Run time attributes:
  runtime {
-   docker: docker
+   docker: mhubai/~{mhub_model_name}
    cpu: cpus
    #cpuPlatform: cpuFamily
    zones: zones
