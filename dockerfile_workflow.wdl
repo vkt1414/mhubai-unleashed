@@ -90,6 +90,6 @@ task executor{
    gpuCount: 1
  }
  output {
-   File? outputZip  = "*.lz4"
+   File? outputZip  = "output.tar.lz4"
  }
 }
