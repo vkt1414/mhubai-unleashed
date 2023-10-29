@@ -4,101 +4,111 @@ workflow mhubai_workflow {
  input {
    #all the inputs entered here but not hardcoded will appear in the UI as required fields
    #And the hardcoded inputs will appear as optional to override the values entered here
+
+   #CT data
+   File awsOrGcsUrls
+
+   #mhub
    String mhub_model_name
    File? mhubai_custom_config
-   File s5cmdUrls
-   Int preemptibleTries = 3
+
+   #VM Config
    Int cpus = 4
    Int ram = 16
+   Int preemptibleTries = 3
    String gpuType = 'nvidia-tesla-t4'
-   String zones = "europe-west2-a europe-west2-b asia-northeast1-a asia-northeast1-c asia-southeast1-a asia-southeast1-b asia-southeast1-c us-east4-a us-east4-b us-east4-c" 
+   String gpuZones = "europe-west2-a europe-west2-b asia-northeast1-a asia-northeast1-c asia-southeast1-a asia-southeast1-b asia-southeast1-c us-east4-a us-east4-b us-east4-c"
  }
- #calling Papermill Task with the inputs
- call executor{
+ #calling mhubai_terra_runner
+ call mhubai_terra_runner{
    input:
-    s5cmdUrls = s5cmdUrls,
-    mhubai_custom_config = mhubai_custom_config,
+    awsOrGcsUrls = awsOrGcsUrls,
+
     mhub_model_name = mhub_model_name,
+    mhubai_custom_config = mhubai_custom_config,
+
+    #mhubai dockerimages are predictable with the below format
     docker = "mhubai/"+mhub_model_name,
-    preemptibleTries = preemptibleTries,
+
     cpus = cpus,
     ram = ram,
+    preemptibleTries = preemptibleTries,
     gpuType = gpuType,
-    #cpuFamily = cpuFamily, 
-    zones = zones
+    gpuZones = gpuZones
 }
  output {
-  #output notebooks
-   File? outputZip = executor.outputZip
+   File? compressedOutputFile = mhubai_terra_runner.compressedOutputFile
  }
 }
 
 #Task Definitions
-task executor{
+task mhubai_terra_runner{
  input {
    #Just like the workflow inputs, any new inputs entered here but not hardcoded will appear in the UI as required fields
-    File s5cmdUrls
-    File? mhubai_custom_config
-    String docker
+
+    #CT data
+    File awsOrGcsUrls
+
+    #mhub
     String mhub_model_name
-    Int preemptibleTries
+    File? mhubai_custom_config
+
+    String docker
+
+    #VM Config
     Int cpus
     Int ram
+    Int preemptibleTries
     String gpuType 
     String zones
  }
  command {
-   #install s5cmd
-   wget "https://github.com/peak/s5cmd/releases/download/v2.2.2/s5cmd_2.2.2_Linux-64bit.tar.gz" \
-   && tar -xvzf "s5cmd_2.2.2_Linux-64bit.tar.gz"\
-   && rm "s5cmd_2.2.2_Linux-64bit.tar.gz" \
-   && mv s5cmd /usr/local/bin/s5cmd
-
-  #install lz4, which will be used for compressing output files lateron
-  apt-get update
-  apt-get install -y lz4 tar
-
-  #modify the input manifest conducive to s5cmd download
-  while IFS= read -r line
-  do
-    # Modify the line and write to output.txt
-    echo "cp --show-progress $line /app/data/input_data" >> s5cmd_manifest.txt
-  done < ~{s5cmdUrls}
-
-  #Download the data assuming aws_urls
-  s5cmd --no-sign-request --endpoint-url https://s3.amazonaws.com run s5cmd_manifest.txt
-
-  #if aws_urls did not work, try downloading from gcs_urls
-  if [ $? -ne 0 ]; then
-      echo "S3 command failed, trying GCS..."
-      s5cmd --no-sign-request --endpoint-url https://storage.googleapis.com run s5cmd_manifest.txt
-  fi
-
-  #mhub uses /app as the working directory..so we try to simulate the same
-  cd /app
-
-  python3 -m mhubio.run --config ~{select_first([mhubai_custom_config, "/app/models/" + mhub_model_name + "/config/default.yml"])}
-
-  tar -C /app/data -cvf - output_data | lz4 > /cromwell_root/output.tar.lz4
-
-  mv /app/data/output_data/* /cromwell_root/
-
-
+    # Install s5cmd
+    wget "https://github.com/peak/s5cmd/releases/download/v2.2.2/s5cmd_2.2.2_Linux-64bit.tar.gz" \
+    && tar -xvzf "s5cmd_2.2.2_Linux-64bit.tar.gz" \
+    && rm "s5cmd_2.2.2_Linux-64bit.tar.gz" \
+    && mv s5cmd /usr/local/bin/s5cmd
+    
+    # Install lz4 and tar for compressing output files
+    apt-get update
+    apt-get install -y lz4 tar
+    
+    # Modify the input manifest conducive to s5cmd download
+    while IFS= read -r line; do
+        echo "cp --show-progress $line /app/data/input_data" >> s5cmd_manifest.txt
+    done < ~{awsOrGcsUrls}
+    
+    # Download the data assuming aws_urls
+    s5cmd --no-sign-request --endpoint-url https://s3.amazonaws.com run s5cmd_manifest.txt
+    
+    # If aws_urls did not work, try downloading from gcs_urls
+    if [ $? -ne 0 ]; then
+        echo "S3 command failed, trying GCS..."
+        s5cmd --no-sign-request --endpoint-url https://storage.googleapis.com run s5cmd_manifest.txt
+    fi
+    
+    # mhub uses /app as the working directory, so we try to simulate the same
+    cd /app
+    
+    # Run mhubio.run with the provided config or the default config
+    python3 -m mhubio.run --config ~{select_first([mhubai_custom_config, "/app/models/" + mhub_model_name + "/config/default.yml"])}
+    
+    # Compress output data and move it to Cromwell root directory
+    tar -C /app/data -cvf - output_data | lz4 > /cromwell_root/output.tar.lz4
+    mv /app/data/output_data/* /cromwell_root/
  }
  #Run time attributes:
  runtime {
    docker: docker
    cpu: cpus
-   #cpuPlatform: cpuFamily
-   zones: zones
+   zones: gpuZones
    memory: ram + " GiB"
    disks: "local-disk 50 HDD" 
    preemptible: preemptibleTries
-   maxRetries: 3
    gpuType: gpuType 
    gpuCount: 1
  }
  output {
-   File? outputZip  = "output.tar.lz4"
+   File? compressedOutputFile  = "output.tar.lz4"
  }
 }
