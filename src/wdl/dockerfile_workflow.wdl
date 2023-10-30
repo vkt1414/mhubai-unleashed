@@ -26,7 +26,7 @@ workflow mhubai_workflow {
 
    #VM Config
    Int cpus = 4
-   Int ram = 16
+   Int ram = 15
    Int preemptibleTries = 3
    String gpuType = 'nvidia-tesla-t4'
    String gpuZones = "europe-west2-a europe-west2-b asia-northeast1-a asia-northeast1-c asia-southeast1-a asia-southeast1-b asia-southeast1-c us-east4-a us-east4-b us-east4-c"
@@ -103,8 +103,8 @@ task mhubai_terra_runner{
     cd /app
     
     # Run mhubio.run with the provided config or the default config
-    python3 -m mhubio.run --config /app/models/~{mhub_model_name}/config/default.yml
-    #python3 -m mhubio.run --config ~{select_first([mhubai_custom_config, "/app/models/" + mhub_model_name + "/config/default.yml"])}
+    #python3 -m mhubio.run --config /app/models/~{mhub_model_name}/config/default.yml
+    python3 -m mhubio.run --config ~{select_first([mhubai_custom_config, "/app/models/" + mhub_model_name + "/config/default.yml"])} --debug --print
     
     # Compress output data and move it to Cromwell root directory
     tar -C /app/data -cvf - output_data | lz4 > /cromwell_root/output.tar.lz4
