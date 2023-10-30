@@ -112,7 +112,7 @@ task mhubai_terra_runner{
  }
  #Run time attributes:
  runtime {
-   docker: vamsithiriveedhi/mhubai_totalsegmentator
+   docker: "vamsithiriveedhi/mhubai_totalsegmentator"
    cpu: cpus
    zones: gpuZones
    memory: ram + " GiB"
