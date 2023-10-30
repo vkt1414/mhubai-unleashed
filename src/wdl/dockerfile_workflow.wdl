@@ -40,7 +40,7 @@ workflow mhubai_workflow {
     mhubai_custom_config = mhubai_custom_config,
 
     #mhubai dockerimages are predictable with the below format
-    docker = "mhubai/"+mhub_model_name,
+    docker = "vamsithiriveedhi/mhubai_"+mhub_model_name,
 
     cpus = cpus,
     ram = ram,
@@ -112,7 +112,7 @@ task mhubai_terra_runner{
  }
  #Run time attributes:
  runtime {
-   docker: "vamsithiriveedhi/mhubai_totalsegmentator"
+   docker: docker
    cpu: cpus
    zones: gpuZones
    memory: ram + " GiB"
