@@ -40,7 +40,7 @@ workflow mhubai_workflow {
     mhubai_custom_config = mhubai_custom_config,
 
     #mhubai dockerimages are predictable with the below format
-    docker = "vamsithiriveedhi/mhubai_"+mhub_model_name,
+    docker = "mhubai/"+mhub_model_name,
 
     cpus = cpus,
     ram = ram,
@@ -120,6 +120,7 @@ task mhubai_terra_runner{
    preemptible: preemptibleTries
    gpuType: gpuType 
    gpuCount: 1
+   nvidiaDriverVersion: "525.147.05"
  }
  output {
    File? compressedOutputFile  = "output.tar.lz4"
