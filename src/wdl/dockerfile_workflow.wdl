@@ -83,13 +83,9 @@ task mhubai_terra_runner{
     
     # Install lz4 and tar for compressing output files
     apt-get update
-    apt-get install -y lz4 tar
-    
-    # Modify the input manifest conducive to s5cmd download
-    #while IFS= read -r line; do
-    #    echo "cp --show-progress $line /app/data/input_data" >> s5cmd_manifest.txt
-    #done < ~{awsOrGcsUrls}
+    apt-get install -y lz4 tar pigz
 
+    #download each series into its crdc_uid folder
     while IFS= read -r line; do
         # Extract the series ID from the URL
         crdc_uid=$(echo $line | cut -d'/' -f4)
@@ -111,7 +107,7 @@ task mhubai_terra_runner{
     
     # Run mhubio.run with the provided config or the default config
     #python3 -m mhubio.run --config /app/models/~{mhub_model_name}/config/default.yml
-    python3 -m mhubio.run --config ~{select_first([mhubai_custom_config, "/app/models/" + mhub_model_name + "/config/default.yml"])} --debug --print
+    python3 -m mhubio.run --config ~{select_first([mhubai_custom_config, "/app/models/" + mhub_model_name + "/config/default.yml"])} --print
     
     # Compress output data and move it to Cromwell root directory
     tar -C /app/data -cvf - output_data | lz4 > /cromwell_root/output.tar.lz4
