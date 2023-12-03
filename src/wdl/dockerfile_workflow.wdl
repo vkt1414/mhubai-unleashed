@@ -86,8 +86,15 @@ task mhubai_terra_runner{
     apt-get install -y lz4 tar
     
     # Modify the input manifest conducive to s5cmd download
+    #while IFS= read -r line; do
+    #    echo "cp --show-progress $line /app/data/input_data" >> s5cmd_manifest.txt
+    #done < ~{awsOrGcsUrls}
+
     while IFS= read -r line; do
-        echo "cp --show-progress $line /app/data/input_data" >> s5cmd_manifest.txt
+        # Extract the series ID from the URL
+        crdc_uid=$(echo $line | cut -d'/' -f4)
+        # Copy the files 
+        echo "cp --show-progress $line /app/data/input_data/$crdc_uid" >> s5cmd_manifest.txt
     done < ~{awsOrGcsUrls}
     
     # Download the data assuming aws_urls
