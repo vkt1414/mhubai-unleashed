@@ -116,7 +116,8 @@ task mhubai_terra_runner{
    cpu: cpus
    zones: gpuZones
    memory: ram + " GiB"
-   disks: "local-disk 50 HDD" 
+   bootDiskSizeGb: 50
+   disks: "local-disk 10 HDD" 
    preemptible: preemptibleTries
    gpuType: gpuType 
    gpuCount: 1
