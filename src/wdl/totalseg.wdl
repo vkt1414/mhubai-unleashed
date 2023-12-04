@@ -102,9 +102,10 @@ task mhubai_terra_runner{
  command {
     # Install s5cmd
     wget -q "https://github.com/peak/s5cmd/releases/download/v2.2.2/s5cmd_2.2.2_Linux-64bit.tar.gz" \
-    && tar -xvzf "s5cmd_2.2.2_Linux-64bit.tar.gz"  s5cmd\ 
+    && tar -xvzf "s5cmd_2.2.2_Linux-64bit.tar.gz" s5cmd \
     && rm "s5cmd_2.2.2_Linux-64bit.tar.gz" \
     && mv s5cmd /usr/local/bin/s5cmd
+
     
     # Install lz4 and tar for compressing output files
     apt-get update && apt-get install -y apt-utils lz4 pigz csvkit
