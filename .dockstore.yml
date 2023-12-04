@@ -3,3 +3,6 @@ workflows:
    - name: mhubaiDockerfileWorkflow
      subclass: WDL
      primaryDescriptorPath: /src/wdl/dockerfile_workflow.wdl
+   - name: mhubai_totalseg
+     subclass: WDL
+     primaryDescriptorPath: /src/wdl/totalseg.wdl
