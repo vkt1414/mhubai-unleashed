@@ -128,7 +128,6 @@ task mhubai_terra_runner{
     cd /app
     
     # Run mhubio.run with the provided config or the default config
-    #python3 -m mhubio.run --config /app/models/~{mhub_model_name}/config/default.yml
     python3 -m mhubio.run --config ~{select_first([mhubai_custom_config, "/app/models/totalsegmentator/config/default.yml"])} --print
     
     # Compress output data and move it to Cromwell root directory
@@ -146,7 +145,7 @@ task mhubai_terra_runner{
    preemptible: preemptibleTries
    gpuType: gpuType 
    gpuCount: 1
-   nvidiaDriverVersion: "525.147.05"
+   #nvidiaDriverVersion: "525.147.05"
  }
  output {
    File compressedOutputFile  = "output.tar.lz4"
