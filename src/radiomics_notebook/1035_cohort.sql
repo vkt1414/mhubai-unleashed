@@ -147,7 +147,7 @@ geometryChecks AS (
       -- at end for each row separated by new line character "\n" so it will be
       -- ready for creating a manifest file later in the workflow
       --string_agg (CONCAT("cp ",REPLACE(sopInstanceUrl, "gs://", "s3://"), " idc_data/"), "\n") as s5cmdUrls
-       ANY_VALUE(CONCAT("cp --show-progress s3",REGEXP_SUBSTR(sopInstanceUrl, "(://.*)/"),"/* ",seriesInstanceUID)) AS s5cmdUrls
+       ANY_VALUE(CONCAT("cp --show-progress s3",REGEXP_SUBSTR(sopInstanceUrl, "(://.*)/"),"/* ",'/app/data/input_data/',seriesInstanceUID)) AS s5cmdUrls
   FROM
       nonLocalizerRawData
   JOIN dotProduct using (SeriesInstanceUID, SOPInstanceUID)
