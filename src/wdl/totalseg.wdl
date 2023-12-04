@@ -24,12 +24,11 @@ workflow mhubai_workflow {
 
 
    #mhub
-   String? mhub_model_name
    File? mhubai_custom_config
 
    #VM Config
-   Int cpus = 4
-   Int ram = 15
+   Int cpus = 2
+   Int ram = 13
 
    Int preemptibleTries = 3
    Int dicomsegAndRadiomicsSR_PreemptibleTries = 3
@@ -47,13 +46,8 @@ workflow mhubai_workflow {
  call mhubai_terra_runner{
    input:
     seriesInstanceS5cmdUrls = seriesInstanceS5cmdUrls,
-
-    mhub_model_name = "totalsegmentator",
     mhubai_custom_config = mhubai_custom_config,
-
-    #mhubai dockerimages are predictable with the below format
-    docker = "vamsithiriveedhi/mhubai_"+mhub_model_name,
-
+    docker = "vamsithiriveedhi/mhubai_totalsegmentator",
     cpus = cpus,
     ram = ram,
     preemptibleTries = preemptibleTries,
@@ -94,7 +88,6 @@ task mhubai_terra_runner{
     File seriesInstanceS5cmdUrls
 
     #mhub
-    String mhub_model_name
     File? mhubai_custom_config
 
     String docker
