@@ -24,7 +24,7 @@ workflow mhubai_workflow {
 
 
    #mhub
-   String mhub_model_name
+   String? mhub_model_name
    File? mhubai_custom_config
 
    #VM Config
