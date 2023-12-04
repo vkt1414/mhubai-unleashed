@@ -108,7 +108,7 @@ task mhubai_terra_runner{
 
     
     # Install lz4 and tar for compressing output files
-    apt-get update && apt-get install -y apt-utils lz4 pigz csvkit
+    apt-get update && apt-get install -y lz4 pigz
     
     # Get the column number of s5cmdUrls
     col_num=$(head -n 1 ~{seriesInstanceS5cmdUrls} | tr ',' '\n' | grep -n 's5cmdUrls' | cut -d: -f1)
