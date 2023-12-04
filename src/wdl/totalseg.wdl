@@ -117,10 +117,10 @@ task mhubai_terra_runner{
     apt-get update && apt-get install -y apt-utils lz4 pigz csvkit
     
     # Get the column number of s5cmdUrls
-    col_num=$(awk -F',' '(NR==1){for(i=1;i<=NF;i++){if($i=="s5cmdUrls") print i}}' ~{seriesInstanceS5cmdUrls})
-	
+    col_num=$(head -n 1 ~{seriesInstanceS5cmdUrls} | tr ',' '\n' | grep -n 's5cmdUrls' | cut -d: -f1)
+
     # Extract the s5cmdUrls column without the header
-    awk -v col=$col_num -F',' 'NR>1 {print $col}' ~{seriesInstanceS5cmdUrls} > s5cmd_manifest.txt
+    tail -n +2 ~{seriesInstanceS5cmdUrls} | cut -d',' -f$col_num > s5cmd_manifest.txt
 
     # Download the data assuming aws_urls
     s5cmd --no-sign-request --endpoint-url https://s3.amazonaws.com run s5cmd_manifest.txt
