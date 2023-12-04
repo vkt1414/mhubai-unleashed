@@ -156,7 +156,7 @@ task mhubai_terra_runner{
    nvidiaDriverVersion: "525.147.05"
  }
  output {
-   File? compressedOutputFile  = "output.tar.lz4"
+   File compressedOutputFile  = "output.tar.lz4"
  }
 }
 #Task Definitions
