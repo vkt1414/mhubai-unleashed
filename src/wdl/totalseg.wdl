@@ -67,6 +67,7 @@ call dicomsegAndRadiomicsSR{
     inferenceZipFile = mhubai_terra_runner.compressedOutputFile
 }
  output {
+   File? logs = mhubai_terra_runner.logs
    File dicomsegAndRadiomicsSR_OutputNotebook = dicomsegAndRadiomicsSR.dicomsegAndRadiomicsSR_OutputJupyterNotebook   
    File dicomsegAndRadiomicsSR_UsageMetrics  = dicomsegAndRadiomicsSR.dicomsegAndRadiomicsSR_UsageMetrics
    File dicomsegAndRadiomicsSR_CompressedFiles = dicomsegAndRadiomicsSR.dicomsegAndRadiomicsSR_CompressedFiles
@@ -129,10 +130,11 @@ task mhubai_terra_runner{
     cd /app
     
     # Run mhubio.run with the provided config or the default config
-    python3 -m mhubio.run --config ~{select_first([mhubai_custom_config, "/app/models/totalsegmentator/config/default.yml"])} --print
+    python3 -m mhubio.run --config ~{select_first([mhubai_custom_config, "/app/models/totalsegmentator/config/default.yml"])} --debug
     
     # Compress output data and move it to Cromwell root directory
     tar -C /app/data -cvf - output_data | lz4 > /cromwell_root/output.tar.lz4
+    tar -C /app/data/_global -cvf - mhub_log | lz4 > /cromwell_root/mhub_log.tar.lz4
     mv /app/data/output_data/* /cromwell_root/
  }
  #Run time attributes:
@@ -150,6 +152,7 @@ task mhubai_terra_runner{
  }
  output {
    File compressedOutputFile  = "output.tar.lz4"
+   File? logs = "mhub_log.tar.lz4"
  }
 }
 #Task Definitions
