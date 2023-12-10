@@ -39,8 +39,8 @@ workflow mhubai_workflow {
    String dicomsegAndRadiomicsSR_CpuFamily = 'AMD Rome' 
 
    String gpuType = 'nvidia-tesla-t4'
-   String gpuZones = "europe-west2-a europe-west2-b asia-northeast1-a asia-northeast1-c asia-southeast1-a asia-southeast1-b asia-southeast1-c us-east4-a us-east4-b us-east4-c"
-   String dicomsegAndRadiomicsSR_Zones = "us-central1-a us-central1-b us-central1-c us-central1-f us-east1-b us-east1-c us-east1-d us-west1-a us-west1-b us-west1-c"
+   String gpuZones = "us-west4-a us-west4-b us-east4-a us-east4-b us-east4-c europe-west2-a europe-west2-b asia-northeast1-a asia-northeast1-c asia-southeast1-a asia-southeast1-b asia-southeast1-c europe-west4-a europe-west4-b europe-west4-c"
+   String dicomsegAndRadiomicsSR_Zones = "europe-west12-a europe-west12-b europe-west12-c asia-northeast2-a asia-northeast2-b asia-northeast2-c europe-west4-a europe-west4-b europe-west4-c us-east5-a us-east5-b us-east5-c europe-west8-a europe-west8-b europe-west8-c us-south1-a us-south1-b us-south1-c"
  }
  #calling mhubai_terra_runner
  call mhubai_terra_runner{
