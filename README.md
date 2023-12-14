@@ -14,7 +14,7 @@ The workflows in this repository are designed to facilitate the execution of MHU
 
 To get started with these workflows, follow these steps:
 
-1. Visit our Dockstore page: [MHUBAI Unleashed on Dockstore](https://dockstore.org/workflows/github.com/vkt1414/mhubai-unleashed/mhubaiWorkflowOnTerra:main?tab=info)
+1. Visit our Dockstore page: [MHUBAI Unleashed on Dockstore](https://dockstore.org/workflows/github.com/vkt1414/mhubai-unleashed/mhubaiDockerfileWorkflow:main?tab=info)
 
 2. Import the workflow to a platform of your choice:
    - [DNANexus](https://www.dnanexus.com/)
