@@ -86,8 +86,9 @@ task mhubai_terra_runner{
     cd /app
     
     # Run mhubio.run with the provided config or the default config
-    python3 -m mhubio.run --config /app/models/~{mhub_model_name}/config/default.yml
-    #python3 -m mhubio.run --config ~{select_first([mhubai_custom_config, "/app/models/" + mhub_model_name + "/config/default.yml"])} --print
+    wget https://raw.githubusercontent.com/vkt1414/mhubio/nonit/mhubio/run.py
+    
+    python3 /app/run.py --config ~{select_first([mhubai_custom_config, "/app/models/" + mhub_model_name + "/config/default.yml"])} --print --debug
     
     # Compress output data and move it to Cromwell root directory
     tar -C /app/data -cvf - output_data | lz4 > /cromwell_root/output.tar.lz4
