@@ -18,7 +18,7 @@ workflow mhubai_workflow {
    #And the hardcoded inputs will appear as optional to override the values entered here
 
    #CT data
-   File awsOrGcsUrls
+   Array[String] seriesInstanceUIDs
 
    #mhub
    String mhub_model_name
@@ -34,13 +34,13 @@ workflow mhubai_workflow {
  #calling mhubai_terra_runner
  call mhubai_terra_runner{
    input:
-    awsOrGcsUrls = awsOrGcsUrls,
+    seriesInstanceUIDs = seriesInstanceUIDs,
 
     mhub_model_name = mhub_model_name,
     mhubai_custom_config = mhubai_custom_config,
 
     #mhubai dockerimages are predictable with the below format
-    docker = "vamsithiriveedhi/mhubai_"+mhub_model_name,
+    docker = "imagingdatacommons/"+mhub_model_name,
 
     cpus = cpus,
     ram = ram,
@@ -59,7 +59,7 @@ task mhubai_terra_runner{
    #Just like the workflow inputs, any new inputs entered here but not hardcoded will appear in the UI as required fields
 
     #CT data
-    File awsOrGcsUrls
+    Array[String] seriesInstanceUIDs
 
     #mhub
     String mhub_model_name
@@ -74,32 +74,18 @@ task mhubai_terra_runner{
     String gpuType 
     String gpuZones
  }
- command {
-    # Install s5cmd
-    wget -q "https://github.com/peak/s5cmd/releases/download/v2.2.2/s5cmd_2.2.2_Linux-64bit.tar.gz" \
-    && tar -xvzf "s5cmd_2.2.2_Linux-64bit.tar.gz"  s5cmd\ 
-    && rm "s5cmd_2.2.2_Linux-64bit.tar.gz" \
-    && mv s5cmd /usr/local/bin/s5cmd
-    
+ command {    
     # Install lz4 and tar for compressing output files
     apt-get update && apt-get install -y apt-utils lz4 pigz
 
-    #download each series into its crdc_uid folder
-    while IFS= read -r line; do
-        # Extract the series ID from the URL
-        crdc_uid=$(echo $line | cut -d'/' -f4)
-        # Copy the files 
-        echo "cp --show-progress $line /app/data/input_data/$crdc_uid" >> s5cmd_manifest.txt
-    done < ~{awsOrGcsUrls}
-    
-    # Download the data assuming aws_urls
-    s5cmd --no-sign-request --endpoint-url https://s3.amazonaws.com run s5cmd_manifest.txt
-    
-    # If aws_urls did not work, try downloading from gcs_urls
-    if [ $? -ne 0 ]; then
-        echo "S3 command failed, trying GCS..."
-        s5cmd --no-sign-request --endpoint-url https://storage.googleapis.com run s5cmd_manifest.txt
-    fi
+    pip install idc-index
+
+    python3 <<CODE
+    import idc_index
+    from idc_index import index
+    client = index.IDCClient()
+    client.download_from_selection(seriesInstanceUID = ~{seriesInstanceUIDs}, downloadDir='/app')
+    CODE
     
     # mhub uses /app as the working directory, so we try to simulate the same
     cd /app
