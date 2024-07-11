@@ -80,12 +80,7 @@ task mhubai_terra_runner{
 
     pip install idc-index
 
-    python3 <<CODE
-    import idc_index
-    from idc_index import index
-    client = index.IDCClient()
-    client.download_from_selection(seriesInstanceUID = ~{seriesInstanceUIDs}, downloadDir='/app')
-    CODE
+    idc download-from-selection --series-instance-uid  ~{sep=',' seriesInstanceUIDs} --download-dir '/app'
     
     # mhub uses /app as the working directory, so we try to simulate the same
     cd /app
