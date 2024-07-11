@@ -3,3 +3,6 @@ workflows:
    - name: mhubaiDockerfileWorkflow
      subclass: WDL
      primaryDescriptorPath: /src/wdl/dockerfile_workflow.wdl
+     authors:
+      - name: ImagingDataCommons
+        email: vthiriveedhi@mgb.org  
