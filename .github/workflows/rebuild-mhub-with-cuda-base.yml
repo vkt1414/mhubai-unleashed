@@ -87,6 +87,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix: ${{ fromJson(needs.setup-matrix.outputs.matrix) }}
+      fail-fast: false
     steps:
       - name: Checkout MHub code
         uses: actions/checkout@v4
