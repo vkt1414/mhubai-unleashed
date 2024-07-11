@@ -46,7 +46,9 @@ jobs:
 
       - name: Get MHub's latest git hash
         id: get-hash
-        run: echo "MHUB_SHA=$(git rev-parse HEAD)" >> $GITHUB_ENV
+        run: |
+          MHUB_SHA=$(curl --silent "https://api.github.com/repos/MHubAI/models/commits/master" | jq -r .sha)
+          echo "MHUB_SHA=$MHUB_SHA" >> $GITHUB_ENV
 
       - name: Modify Dockerfile base image
         run: |
