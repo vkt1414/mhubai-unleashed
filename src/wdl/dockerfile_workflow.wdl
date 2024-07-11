@@ -80,7 +80,7 @@ task mhubai_terra_runner{
 
     pip install idc-index
 
-    idc download-from-selection --series-instance-uid  ~{sep=',' seriesInstanceUIDs} --download-dir '/app'
+    idc download-from-selection --series-instance-uid  ~{sep=',' seriesInstanceUIDs} --download-dir '/app/data/input_data'
     
     # mhub uses /app as the working directory, so we try to simulate the same
     cd /app
