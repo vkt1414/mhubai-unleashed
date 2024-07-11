@@ -44,6 +44,10 @@ jobs:
           repository: MHubAI/models
           path: mhub
 
+      - name: Get MHub's latest git hash
+        id: get-hash
+        run: echo "MHUB_SHA=$(git rev-parse HEAD)" >> $GITHUB_ENV
+
       - name: Modify Dockerfile base image
         run: |
           sed -i '1s/ubuntu:20.04/nvidia\/cuda:11.2.5.0-base-ubuntu20.04/' ./mhub/base/dockerfiles/Dockerfile
@@ -74,7 +78,7 @@ jobs:
           context: ./mhub
           file: ./mhub/base/dockerfiles/Dockerfile
           push: true
-          tags: imagingdatacommons/mhubai_base:${{ github.sha }}
+          tags: imagingdatacommons/mhubai_base:${{ env.MHUB_SHA }},imagingdatacommons/mhubai_base:latest
 
   build_model_images:
     needs: [setup-matrix, build_base_image]
@@ -90,7 +94,7 @@ jobs:
 
       - name: Modify Dockerfile base image
         run: |
-          sed -i '1s/mhubai\/base:latest/imagingdatacommons\/mhubai_base:${{ github.sha }}/' ./mhub/models/${{ matrix.model }}/dockerfiles/Dockerfile
+          sed -i '1s/mhubai\/base:latest/imagingdatacommons\/mhubai_base:${{ env.MHUB_SHA }}/' ./mhub/models/${{ matrix.model }}/dockerfiles/Dockerfile
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
@@ -118,4 +122,4 @@ jobs:
           context: ./mhub
           file: ./mhub/models/${{ matrix.model }}/dockerfiles/Dockerfile
           push: true
-          tags: imagingdatacommons/${{ matrix.model }}:${{ github.sha }}
+          tags: imagingdatacommons/${{ matrix.model }}:${{ env.MHUB_SHA }},imagingdatacommons/${{ matrix.model }}:latest
